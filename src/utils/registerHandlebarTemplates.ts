@@ -92,6 +92,12 @@ export interface Templates {
     };
 }
 
+export interface HbsFilesOverride {
+    exportModel?: TemplateSpecification,
+    exportSchema?: TemplateSpecification,
+    exportService?: TemplateSpecification
+}
+
 /**
  * Read all the Handlebar templates that we need and return on wrapper object
  * so we can easily access the templates in out generator / write functions.
@@ -100,6 +106,7 @@ export function registerHandlebarTemplates(root: {
     httpClient: HttpClient;
     useOptions: boolean;
     useUnionTypes: boolean;
+    hbsFilesOverride?: HbsFilesOverride;
 }): Templates {
     registerHandlebarHelpers(root);
 
@@ -107,9 +114,9 @@ export function registerHandlebarTemplates(root: {
     const templates: Templates = {
         index: Handlebars.template(templateIndex),
         exports: {
-            model: Handlebars.template(templateExportModel),
-            schema: Handlebars.template(templateExportSchema),
-            service: Handlebars.template(templateExportService),
+            model: Handlebars.template(root.hbsFilesOverride?.exportModel || templateExportModel),
+            schema: Handlebars.template(root.hbsFilesOverride?.exportSchema || templateExportSchema),
+            service: Handlebars.template(root.hbsFilesOverride?.exportService || templateExportService),
         },
         core: {
             settings: Handlebars.template(templateCoreSettings),

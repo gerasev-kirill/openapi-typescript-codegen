@@ -19,7 +19,8 @@ export async function writeClientModels(
     templates: Templates,
     outputPath: string,
     httpClient: HttpClient,
-    useUnionTypes: boolean
+    useUnionTypes: boolean,
+    additionalContext?: Object
 ): Promise<void> {
     for (const model of models) {
         const file = resolve(outputPath, `${model.name}.ts`);
@@ -27,6 +28,7 @@ export async function writeClientModels(
             ...model,
             httpClient,
             useUnionTypes,
+            additionalContext: additionalContext || {}
         });
         await writeFile(file, format(templateResult));
     }

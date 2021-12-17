@@ -25,7 +25,8 @@ export async function writeClientServices(
     httpClient: HttpClient,
     useUnionTypes: boolean,
     useOptions: boolean,
-    postfix: string
+    postfix: string,
+    additionalContext?: Object
 ): Promise<void> {
     for (const service of services) {
         const file = resolve(outputPath, `${service.name}${postfix}.ts`);
@@ -37,6 +38,7 @@ export async function writeClientServices(
             useVersion,
             useOptions,
             postfix,
+            additionalContext: additionalContext || {}
         });
         await writeFile(file, format(templateResult));
     }

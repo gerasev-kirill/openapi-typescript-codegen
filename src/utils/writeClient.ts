@@ -39,7 +39,8 @@ export async function writeClient(
     exportModels: boolean,
     exportSchemas: boolean,
     postfix: string,
-    request?: string
+    request?: string,
+    additionalContext?: Object
 ): Promise<void> {
     const outputPath = resolve(process.cwd(), output);
     const outputPathCore = resolve(outputPath, 'core');
@@ -67,20 +68,21 @@ export async function writeClient(
             httpClient,
             useUnionTypes,
             useOptions,
-            postfix
+            postfix,
+            additionalContext
         );
     }
 
     if (exportSchemas) {
         await rmdir(outputPathSchemas);
         await mkdir(outputPathSchemas);
-        await writeClientSchemas(client.models, templates, outputPathSchemas, httpClient, useUnionTypes);
+        await writeClientSchemas(client.models, templates, outputPathSchemas, httpClient, useUnionTypes, additionalContext);
     }
 
     if (exportModels) {
         await rmdir(outputPathModels);
         await mkdir(outputPathModels);
-        await writeClientModels(client.models, templates, outputPathModels, httpClient, useUnionTypes);
+        await writeClientModels(client.models, templates, outputPathModels, httpClient, useUnionTypes, additionalContext);
     }
 
     if (exportCore || exportServices || exportSchemas || exportModels) {

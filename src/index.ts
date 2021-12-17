@@ -5,7 +5,7 @@ import { getOpenApiSpec } from './utils/getOpenApiSpec';
 import { getOpenApiVersion, OpenApiVersion } from './utils/getOpenApiVersion';
 import { isString } from './utils/isString';
 import { postProcessClient } from './utils/postProcessClient';
-import { registerHandlebarTemplates } from './utils/registerHandlebarTemplates';
+import { HbsFilesOverride, registerHandlebarTemplates } from './utils/registerHandlebarTemplates';
 import { writeClient } from './utils/writeClient';
 
 export { HttpClient } from './HttpClient';
@@ -22,6 +22,8 @@ export type Options = {
     exportSchemas?: boolean;
     postfix?: string;
     request?: string;
+    hbsFilesOverride?: HbsFilesOverride,
+    additionalContext: Object,
     write?: boolean;
 };
 
@@ -40,6 +42,8 @@ export type Options = {
  * @param exportSchemas: Generate schemas
  * @param postfix: Service name postfix
  * @param request: Path to custom request file
+ * @param hbsFilesOverride: Object with paths to hbs files
+ * @param additionalContext: Additional context for models, service and schema template files
  * @param write Write the files to disk (true or false)
  */
 export async function generate({
@@ -54,6 +58,8 @@ export async function generate({
     exportSchemas = false,
     postfix = 'Service',
     request,
+    hbsFilesOverride,
+    additionalContext,
     write = true,
 }: Options): Promise<void> {
     const openApi = isString(input) ? await getOpenApiSpec(input) : input;
@@ -62,6 +68,7 @@ export async function generate({
         httpClient,
         useUnionTypes,
         useOptions,
+        hbsFilesOverride,
     });
 
     switch (openApiVersion) {
@@ -81,7 +88,8 @@ export async function generate({
                 exportModels,
                 exportSchemas,
                 postfix,
-                request
+                request,
+                additionalContext
             );
             break;
         }
@@ -102,7 +110,8 @@ export async function generate({
                 exportModels,
                 exportSchemas,
                 postfix,
-                request
+                request,
+                additionalContext
             );
             break;
         }
