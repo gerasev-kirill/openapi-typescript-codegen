@@ -1,9 +1,9 @@
 import { HttpClient } from '../HttpClient';
 import { registerHandlebarTemplates } from './registerHandlebarTemplates';
-import * as handlebars from 'handlebars'
+import * as handlebars from 'handlebars';
 
 function stringToHandlebars(template: string){
-    let prtemplate = handlebars.precompile(template, {
+    const prtemplate = handlebars.precompile(template, {
         strict: true,
         noEscape: false,
         preventIndent: true,

@@ -1,7 +1,10 @@
+import { EOL } from 'os';
+
 import type { Model } from '../client/interfaces/Model';
 import { HttpClient } from '../HttpClient';
+import { Indent } from '../Indent';
 import { writeFile } from './fileSystem';
-import { Templates } from './registerHandlebarTemplates';
+import type { Templates } from './registerHandlebarTemplates';
 import { writeClientSchemas } from './writeClientSchemas';
 
 jest.mock('./fileSystem');
@@ -30,6 +33,7 @@ describe('writeClientSchemas', () => {
 
         const templates: Templates = {
             index: () => 'index',
+            client: () => 'client',
             exports: {
                 model: () => 'model',
                 schema: () => 'schema',
@@ -42,11 +46,13 @@ describe('writeClientSchemas', () => {
                 apiResult: () => 'apiResult',
                 cancelablePromise: () => 'cancelablePromise',
                 request: () => 'request',
+                baseHttpRequest: () => 'baseHttpRequest',
+                httpRequest: () => 'httpRequest',
             },
         };
 
-        await writeClientSchemas(models, templates, '/', HttpClient.FETCH, false);
+        await writeClientSchemas(models, templates, '/', HttpClient.FETCH, false, Indent.SPACE_4);
 
-        expect(writeFile).toBeCalledWith('/$User.ts', 'schema');
+        expect(writeFile).toBeCalledWith('/$User.ts', `schema${EOL}`);
     });
 });

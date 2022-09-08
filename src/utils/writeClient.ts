@@ -1,10 +1,13 @@
 import { resolve } from 'path';
 
 import type { Client } from '../client/interfaces/Client';
-import { HttpClient } from '../HttpClient';
+import type { HttpClient } from '../HttpClient';
+import type { Indent } from '../Indent';
 import { mkdir, rmdir } from './fileSystem';
+import { isDefined } from './isDefined';
 import { isSubDirectory } from './isSubdirectory';
-import { Templates } from './registerHandlebarTemplates';
+import type { Templates } from './registerHandlebarTemplates';
+import { writeClientClass } from './writeClientClass';
 import { writeClientCore } from './writeClientCore';
 import { writeClientIndex } from './writeClientIndex';
 import { writeClientModels } from './writeClientModels';
@@ -19,15 +22,17 @@ import { writeClientServices } from './writeClientServices';
  * @param httpClient The selected httpClient (fetch, xhr, node or axios)
  * @param useOptions Use options or arguments functions
  * @param useUnionTypes Use union types instead of enums
- * @param exportCore: Generate core client classes
- * @param exportServices: Generate services
- * @param exportModels: Generate models
- * @param exportSchemas: Generate schemas
- * @param exportSchemas: Generate schemas
- * @param postfix: Service name postfix
- * @param request: Path to custom request file
+ * @param exportCore Generate core client classes
+ * @param exportServices Generate services
+ * @param exportModels Generate models
+ * @param exportSchemas Generate schemas
+ * @param exportSchemas Generate schemas
+ * @param indent Indentation options (4, 2 or tab)
+ * @param postfix Service name postfix
+ * @param clientName Custom client class name
+ * @param request Path to custom request file
  */
-export async function writeClient(
+export const writeClient = async (
     client: Client,
     templates: Templates,
     output: string,
@@ -38,10 +43,12 @@ export async function writeClient(
     exportServices: boolean,
     exportModels: boolean,
     exportSchemas: boolean,
+    indent: Indent,
     postfix: string,
+    clientName?: string,
     request?: string,
-    additionalContext?: Object
-): Promise<void> {
+    additionalContext?: Record<string, unknown>
+): Promise<void> => {
     const outputPath = resolve(process.cwd(), output);
     const outputPathCore = resolve(outputPath, 'core');
     const outputPathModels = resolve(outputPath, 'models');
@@ -55,7 +62,7 @@ export async function writeClient(
     if (exportCore) {
         await rmdir(outputPathCore);
         await mkdir(outputPathCore);
-        await writeClientCore(client, templates, outputPathCore, httpClient, request);
+        await writeClientCore(client, templates, outputPathCore, httpClient, indent, clientName, request);
     }
 
     if (exportServices) {
@@ -68,7 +75,9 @@ export async function writeClient(
             httpClient,
             useUnionTypes,
             useOptions,
+            indent,
             postfix,
+            clientName,
             additionalContext
         );
     }
@@ -76,13 +85,18 @@ export async function writeClient(
     if (exportSchemas) {
         await rmdir(outputPathSchemas);
         await mkdir(outputPathSchemas);
-        await writeClientSchemas(client.models, templates, outputPathSchemas, httpClient, useUnionTypes, additionalContext);
+        await writeClientSchemas(client.models, templates, outputPathSchemas, httpClient, useUnionTypes, indent, additionalContext);
     }
 
     if (exportModels) {
         await rmdir(outputPathModels);
         await mkdir(outputPathModels);
-        await writeClientModels(client.models, templates, outputPathModels, httpClient, useUnionTypes, additionalContext);
+        await writeClientModels(client.models, templates, outputPathModels, httpClient, useUnionTypes, indent, additionalContext);
+    }
+
+    if (isDefined(clientName)) {
+        await mkdir(outputPath);
+        await writeClientClass(client, templates, outputPath, httpClient, clientName, indent, postfix);
     }
 
     if (exportCore || exportServices || exportSchemas || exportModels) {
@@ -96,7 +110,8 @@ export async function writeClient(
             exportServices,
             exportModels,
             exportSchemas,
-            postfix
+            postfix,
+            clientName
         );
     }
-}
+};
