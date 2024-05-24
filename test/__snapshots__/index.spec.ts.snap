@@ -2347,7 +2347,7 @@ export class DefaultService {
     public static serviceWithEmptyTag(): CancelablePromise<void> {
         return __request(OpenAPI, {
             method: 'GET',
-            url: '/api/v{api-version}/no-tag',
+            url: '/api/v\{api-version}/no-tag',
         });
     }
 
@@ -2916,29 +2916,6 @@ export class ResponseService {
 
 }
 "
-`;
-
-exports[`v2 should generate: ./test/generated/v2/services/ServiceService.ts 1`] = `
-"/* istanbul ignore file */
-/* tslint:disable */
-/* eslint-disable */
-import type { CancelablePromise } from '../core/CancelablePromise';
-import { request as __request } from '../core/request';
-import { OpenAPI } from '../core/OpenAPI';
-
-export class ServiceService {
-
-    /**
-     * @throws ApiError
-     */
-    public static serviceWithEmptyTag(): CancelablePromise<void> {
-        return __request({
-            method: 'GET',
-            path: \`/api/v\${OpenAPI.VERSION}/no-tag\`,
-        });
-    }
-
-}"
 `;
 
 exports[`v2 should generate: ./test/generated/v2/services/SimpleService.ts 1`] = `
@@ -4468,6 +4445,8 @@ exports[`v3 should generate: ./test/generated/v3/models/ModelWithCircularReferen
 /* tslint:disable */
 /* eslint-disable */
 
+import type { ModelWithCircularReference } from './ModelWithCircularReference';
+
 /**
  * This is a model with one property containing a circular reference
  */
@@ -4869,21 +4848,6 @@ exports[`v3 should generate: ./test/generated/v3/models/SimpleStringWithPattern.
  * This is a simple string
  */
 export type SimpleStringWithPattern = string | null;
-"
-`;
-
-exports[`v3 should generate: ./test/generated/v3/models/binary.ts 1`] = `
-"/* istanbul ignore file */
-/* tslint:disable */
-/* eslint-disable */
-
-export type binary = {
-    readonly id?: string;
-    readonly updated_at?: string;
-    readonly created_at?: string;
-    mime: string;
-    readonly file?: string;
-}
 "
 `;
 
@@ -6153,42 +6117,6 @@ export const $SimpleStringWithPattern = {
 "
 `;
 
-exports[`v3 should generate: ./test/generated/v3/schemas/$binary.ts 1`] = `
-"/* istanbul ignore file */
-/* tslint:disable */
-/* eslint-disable */
-export const $binary = {
-    properties: {
-        id: {
-            type: 'string',
-            isReadOnly: true,
-            minLength: 1,
-        },
-        updated_at: {
-            type: 'string',
-            isReadOnly: true,
-            format: 'date-time',
-        },
-        created_at: {
-            type: 'string',
-            isReadOnly: true,
-            format: 'date-time',
-        },
-        mime: {
-            type: 'string',
-            isRequired: true,
-            maxLength: 24,
-            minLength: 1,
-        },
-        file: {
-            type: 'string',
-            isReadOnly: true,
-            format: 'uri',
-        },
-    },
-} as const;"
-`;
-
 exports[`v3 should generate: ./test/generated/v3/services/CollectionFormatService.ts 1`] = `
 "/* istanbul ignore file */
 /* tslint:disable */
@@ -7111,27 +7039,28 @@ export class ResponseService {
 "
 `;
 
-exports[`v3 should generate: ./test/generated/v3/services/ServiceService.ts 1`] = `
+exports[`v3 should generate: ./test/generated/v3/services/DefaultService.ts 1`] = `
 "/* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
 import type { CancelablePromise } from '../core/CancelablePromise';
-import { request as __request } from '../core/request';
 import { OpenAPI } from '../core/OpenAPI';
+import { request as __request } from '../core/request';
 
-export class ServiceService {
+export class DefaultService {
 
     /**
      * @throws ApiError
      */
     public static serviceWithEmptyTag(): CancelablePromise<void> {
-        return __request({
+        return __request(OpenAPI, {
             method: 'GET',
-            path: \`/api/v\${OpenAPI.VERSION}/no-tag\`,
+            url: '/api/v{api-version}/no-tag',
         });
     }
 
-}"
+}
+"
 `;
 
 exports[`v3 should generate: ./test/generated/v3/services/SimpleService.ts 1`] = `

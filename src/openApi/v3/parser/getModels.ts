@@ -8,6 +8,10 @@ function isObject(value: any): value is Record<string,any>{
     return value !== null && typeof value === 'object'
 }
 
+function isModelDefinition(definition: any){
+    return definition.type || definition.enum || definition.$ref
+}
+
 
 
 export const getModels = (openApi: OpenApi): Model[] => {
@@ -15,7 +19,7 @@ export const getModels = (openApi: OpenApi): Model[] => {
 
     const models: Model[] = [];
     function collectModel(definition: any, definitionName: string){
-        if (definition.type){
+        if (isModelDefinition(definition)){
             const definitionType = getType(definitionName);
             const model = getModel(openApi, definition, true, definitionType.base);
             if (isObject(definitionType.imports[0])){

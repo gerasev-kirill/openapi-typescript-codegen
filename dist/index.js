@@ -1767,13 +1767,16 @@ const getModel = (openApi, definition, isDefinition = false, name = '') => {
 function isObject(value) {
     return value !== null && typeof value === 'object';
 }
+function isModelDefinition(definition) {
+    return definition.type || definition.enum || definition.$ref;
+}
 const getModels = (openApi) => {
     if (!openApi.components)
         return [];
     const models = [];
     function collectModel(definition, definitionName) {
         var _a;
-        if (definition.type) {
+        if (isModelDefinition(definition)) {
             const definitionType = getType(definitionName);
             const model = getModel(openApi, definition, true, definitionType.base);
             if (isObject(definitionType.imports[0])) {
@@ -2484,8 +2487,11 @@ const postProcessModelEnums = (model) => {
 };
 
 const sort = (a, b) => {
-    if (a.typeName) {
+    if (a.typeName && !b.typeName) {
         return -1;
+    }
+    if (b.typeName && !a.typeName) {
+        return 1;
     }
     const nameA = (a.typeName || a).toLowerCase();
     const nameB = (b.typeName || b).toLowerCase();
