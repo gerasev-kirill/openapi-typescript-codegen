@@ -1,0 +1,100 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "swagger",
+        "version": "v1.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:3000/base"
+        }
+    ],
+    "components": {
+        "schemas": {
+            "embedded": {
+                "article": {
+                    "Title": {
+                        "type": "object",
+                        "properties": {
+                            "en": {
+                                "type": "string"
+                            },
+                            "ru": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "Body": {
+                        "$ref": "#/components/schemas/node_modules/vue3-bootstrap5/Bootstrap5/interfaces/TranslatableString"
+                    },
+                    "Body2": {
+                        "type": "object",
+                        "properties": {
+                            "cs": {
+                                "$ref": "#/components/schemas/embedded/article/Title"
+                            },
+                            "ru": {
+                                "$ref": "#/components/schemas/embedded/article/Title"
+                            }
+                        }
+                    }
+                },
+                "EmbModel":{
+                    "type": "object",
+                    "properties": {
+                        "someProp": {
+                            "type": "#/components/schemas/embedded/article/Title",
+                            "nullable": true
+                        },
+                        "otherProp": {
+                            "type": "#/components/schemas/node_modules/vue3-bootstrap5/Bootstrap5/interfaces/TranslatableString"
+                        }
+                    }
+                }
+            },
+            "node_modules":{
+                "vue3-bootstrap5": {
+                    "Bootstrap5": {
+                        "interfaces":{
+                            "TranslatableString": {
+                                "type": "node_module"
+                            },
+                            "GeoPoint": {
+                                "type": "node_module"
+                            }
+                        }
+                    }
+                }
+            },
+            "CmsArticle": {
+                "type": "object",
+                "properties": {
+                    "title": {
+                        "$ref": "#/components/schemas/embedded/article/Title"
+                    },
+                    "body": {
+                        "$ref": "#/components/schemas/embedded/article/Body"
+                    }
+                }
+            },
+            "ArrayWithProperties": {
+                "description": "This is a simple array with properties",
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "foo": {
+                            "type": "string"
+                        },
+                        "bar": {
+                            "type": "string"
+                        },
+                        "article": {
+                            "$ref": "#/components/schemas/CmsArticle"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

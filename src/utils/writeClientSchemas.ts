@@ -1,4 +1,5 @@
-import { resolve } from 'path';
+import path from 'path';
+import fs from 'fs';
 
 import type { Model } from '../client/interfaces/Model';
 import type { HttpClient } from '../HttpClient';
@@ -28,7 +29,15 @@ export const writeClientSchemas = async (
     additionalContext?: Record<string, unknown>
 ): Promise<void> => {
     for (const model of models) {
-        const file = resolve(outputPath, `$${model.name}.ts`);
+        if (model.isNodeModule){
+            continue
+        }
+        const filePath = model.filePath || model.name;
+        const dirName = path.dirname(path.join(outputPath, filePath)); 
+        const fileName = path.basename(filePath)
+        fs.mkdirSync(dirName, { recursive: true });
+
+        const file = path.resolve(outputPath, dirName, `$${fileName}.ts`);
         const templateResult = templates.exports.schema({
             ...model,
             httpClient,

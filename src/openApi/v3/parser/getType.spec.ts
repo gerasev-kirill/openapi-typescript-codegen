@@ -33,7 +33,11 @@ describe('getType', () => {
         expect(type.type).toEqual('Link<string>');
         expect(type.base).toEqual('Link');
         expect(type.template).toEqual('string');
-        expect(type.imports).toEqual(['Link']);
+        expect(type.imports).toEqual([{
+            nodeModule: false,
+            path: 'Link',
+            typeName: 'Link'
+        }]);
         expect(type.isNullable).toEqual(false);
     });
 
@@ -42,7 +46,15 @@ describe('getType', () => {
         expect(type.type).toEqual('Link<Model>');
         expect(type.base).toEqual('Link');
         expect(type.template).toEqual('Model');
-        expect(type.imports).toEqual(['Link', 'Model']);
+        expect(type.imports).toEqual([{
+            nodeModule: false,
+            path: 'Link',
+            typeName: 'Link'
+        },{
+            nodeModule: false,
+            path: 'Model',
+            typeName: 'Model'
+        }]);
         expect(type.isNullable).toEqual(false);
     });
 
@@ -51,7 +63,15 @@ describe('getType', () => {
         expect(type.type).toEqual('Link<Link>');
         expect(type.base).toEqual('Link');
         expect(type.template).toEqual('Link');
-        expect(type.imports).toEqual(['Link', 'Link']);
+        expect(type.imports).toEqual([{
+            nodeModule: false,
+            path: 'Link',
+            typeName: 'Link'
+        },{
+            nodeModule: false,
+            path: 'Link',
+            typeName: 'Link'
+        }]);
         expect(type.isNullable).toEqual(false);
     });
 
@@ -60,7 +80,11 @@ describe('getType', () => {
         expect(type.type).toEqual('model_000');
         expect(type.base).toEqual('model_000');
         expect(type.template).toEqual(null);
-        expect(type.imports).toEqual(['model_000']);
+        expect(type.imports).toEqual([{
+            nodeModule: false,
+            path: 'model.000',
+            typeName: 'model_000'
+        }]);
         expect(type.isNullable).toEqual(false);
     });
 
@@ -69,7 +93,11 @@ describe('getType', () => {
         expect(type.type).toEqual('some_special_schema');
         expect(type.base).toEqual('some_special_schema');
         expect(type.template).toEqual(null);
-        expect(type.imports).toEqual(['some_special_schema']);
+        expect(type.imports).toEqual([{
+            nodeModule: false,
+            path: 'some_special-schema',
+            typeName: 'some_special_schema'
+        }]);
         expect(type.isNullable).toEqual(false);
     });
 
@@ -78,7 +106,11 @@ describe('getType', () => {
         expect(type.type).toEqual('$some_special_schema');
         expect(type.base).toEqual('$some_special_schema');
         expect(type.template).toEqual(null);
-        expect(type.imports).toEqual(['$some_special_schema']);
+        expect(type.imports).toEqual([{
+            nodeModule: false,
+            path: '$some+special+schema',
+            typeName: '$some_special_schema'
+        }]);
         expect(type.isNullable).toEqual(false);
     });
 

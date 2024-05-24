@@ -3,7 +3,15 @@
 {{#if imports}}
 
 {{#each imports}}
+{{#if this.typeName}}
+{{#if this.nodeModule}}
+import { {{{this.typeName}}} } from '{{{this.path}}}';
+{{else}}
+import type { {{{this.typeName}}} } from './{{{this.path}}}';
+{{/if}}
+{{else}}
 import type { {{{this}}} } from './{{{this}}}';
+{{/if}}
 {{/each}}
 {{/if}}
 

@@ -1,4 +1,5 @@
-import { resolve } from 'path';
+import path from 'path';
+import fs from 'fs';
 
 import type { Model } from '../client/interfaces/Model';
 import type { HttpClient } from '../HttpClient';
@@ -27,7 +28,28 @@ export const writeClientModels = async (
     additionalContext?: Record<string, unknown>
 ): Promise<void> => {
     for (const model of models) {
-        const file = resolve(outputPath, `${model.name}.ts`);
+        if (model.isNodeModule){
+            continue;
+        }
+        const filePath = model.filePath || model.name;
+        fs.mkdirSync(
+            path.dirname(path.join(outputPath, filePath)), 
+            { recursive: true }
+        );
+        if (model.isEmbedded){
+            // нам нужно вычислять относительный импорт
+            model.imports = model.imports.map((imp)=>{
+                if (typeof imp === 'string'){
+                    return imp
+                }
+                if (!imp.nodeModule){
+                    imp.path = path.relative(path.dirname(filePath), imp.path)
+                }
+                return imp
+            })
+        }
+
+        const file = path.resolve(outputPath, `${filePath}.ts`);
         const templateResult = templates.exports.model({
             ...model,
             httpClient,

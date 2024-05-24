@@ -17,6 +17,8 @@ export type { OpenAPIConfig } from './core/OpenAPI';
 {{#if models}}
 
 {{#each models}}
+{{#if isEmbedded}}
+{{else}}
 {{#if @root.useUnionTypes}}
 export type { {{{name}}} } from './models/{{{name}}}';
 {{else if enum}}
@@ -26,6 +28,7 @@ export { {{{name}}} } from './models/{{{name}}}';
 {{else}}
 export type { {{{name}}} } from './models/{{{name}}}';
 {{/if}}
+{{/if}}
 {{/each}}
 {{/if}}
 {{/if}}
@@ -33,7 +36,10 @@ export type { {{{name}}} } from './models/{{{name}}}';
 {{#if models}}
 
 {{#each models}}
+{{#if isEmbedded}}
+{{else}}
 export { ${{{name}}} } from './schemas/${{{name}}}';
+{{/if}}
 {{/each}}
 {{/if}}
 {{/if}}

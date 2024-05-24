@@ -49,6 +49,7 @@
         "validate": "tsc --project tsconfig.json --noEmit",
         "run": "node ./test/index.js",
         "test": "jest --selectProjects UNIT",
+        "test:index": "jest test/index.spec.ts",
         "test:update": "jest --selectProjects UNIT --updateSnapshot",
         "test:watch": "jest --selectProjects UNIT --watch",
         "test:coverage": "jest --selectProjects UNIT --coverage",

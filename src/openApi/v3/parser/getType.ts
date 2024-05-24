@@ -71,10 +71,26 @@ export const getType = (type: string | string[] = 'any', format?: string): Type 
     }
 
     if (typeWithoutNamespace) {
+        let path = typeWithoutNamespace.split('/');
+        const type = encode(path[path.length-1]);
+        const isNodeModule = path[0] === 'node_modules';
+        if (isNodeModule){
+            path.splice(0,1);
+            path.splice(path.length-1, 1);
+        }
+        result.type = type;
+        result.base = type;
+        result.imports.push({
+            typeName: type,
+            path: path.join('/'),
+            nodeModule: isNodeModule
+        });
+        /*
         const type = encode(typeWithoutNamespace);
         result.type = type;
         result.base = type;
         result.imports.push(type);
+        */
         return result;
     }
 
